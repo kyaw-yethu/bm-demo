@@ -1,5 +1,6 @@
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
+import time
 
 annotations = [
     {
@@ -17,7 +18,58 @@ annotations = [
 def my_custom_annotation_handler(annotation):
     print(f"Annotation {annotation} clicked.")
 
+# Streamed response generator
+def bot_response_generator(user_input):
+    """Generate streaming bot responses based on user input"""
+    if "paper" in user_input.lower():
+        response = "You can upload a paper using the file uploader in the 'Upload Paper' tab. I can help you understand it better!"
+    elif "quiz" in user_input.lower() or "test" in user_input.lower():
+        response = "Head over to the 'Test Knowledge' tab to take quizzes on papers you've read or explore your knowledge map."
+    elif "mode" in user_input.lower() or "reading" in user_input.lower():
+        response = "We offer three reading modes: Exploratory (for new ideas), Understanding (for comprehensive learning), and Revisiting (for quick review)."
+    else:
+        response = "How can I help you with your academic paper reading experience today? You can ask about reading modes, paper uploads, or knowledge testing."
+    
+    # Stream the response word by word
+    for word in response.split():
+        yield word + " "
+        time.sleep(0.05)
+
 def main():
+    # Initialize chat history in session state if it doesn't exist
+    if 'messages' not in st.session_state:
+        st.session_state.messages = []
+    
+    # Sidebar chat interface
+    with st.sidebar:
+        st.title("Paper Reading Assistant")
+        
+        st.info("🔗 test.pdf line 23-50 selected.")
+        
+        # Initialize chat history
+        if "messages" not in st.session_state:
+            st.session_state.messages = []
+
+        # Display chat messages from history on app rerun
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+        # Accept user input
+        if prompt := st.chat_input("What is up?"):
+            # Add user message to chat history
+            st.session_state.messages.append({"role": "user", "content": prompt})
+            # Display user message in chat message container
+            with st.chat_message("user"):
+                st.markdown(prompt)
+
+            # Display assistant response in chat message container
+            with st.chat_message("assistant"):
+                response = st.write_stream(bot_response_generator(prompt))
+            # Add assistant response to chat history
+            st.session_state.messages.append({"role": "assistant", "content": response})        
+
+    # Main content
     _, col1, _ = st.columns(3)
     with col1:
         st.image("media/images/idea.png")
@@ -35,41 +87,41 @@ def main():
     
     # Upload Paper section - now in a tab
     with paper_tab:
+        placeholder = st.empty()
+        placeholder.info("Upload a paper to start reading with our intelligent interface.")
+
         # File uploader is directly available
         uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
         
         if uploaded_file is not None:
-            reading_mode = st.radio(
+            # remove the placeholder
+            placeholder.empty()
+            st.text("Generate and take a quiz to assess how much you've already known about the paper.")
+            st.button("Generate a pre-quiz", key="generate-pretest.")
+
+            reading_mode = st.segmented_control(
                 "Select Reading Mode:",
                 ["Exploratory", "Understanding", "Revisiting"],
-                horizontal=True
+                selection_mode="single",
             )
             
             st.subheader(f"Reading in {reading_mode} Mode")
             
             # Display different annotation styles based on reading mode
             mode_annotations = annotations.copy()
-            if reading_mode == "Exploratory":
-                st.info("Only highlighting new key ideas. Well-known sections are auto-collapsed with summaries.")
-                mode_annotations[0]["color"] = "blue"
-            elif reading_mode == "Understanding":
-                st.info("Highlighting key ideas, supporting examples, and contextual setup with varying levels of highlighting.")
-                mode_annotations[0]["color"] = "green"
-            else:  # Revisiting
-                st.info("Skipping parts that set up context for main contents. Showing connections to your new knowledge.")
-                mode_annotations[0]["color"] = "orange"
             
+            # Convert the uploaded file to bytes
+            pdf_bytes = uploaded_file.read()
             # PDF Viewer with mode-specific annotations
             pdf_viewer(
-                input = "media/docs/asst6.pdf",  # Using default PDF, would use uploaded_file in production
+                input = pdf_bytes,
                 height = 800,
-                width = 800,
+                width = 1000,
                 render_text = True,
                 on_annotation_click=my_custom_annotation_handler,
                 annotations=mode_annotations
             )
         else:
-            st.info("Upload a paper to start reading with our intelligent interface.")
             
             # Display some info about reading modes when no file is uploaded
             with st.expander("Learn about our Reading Modes"):
@@ -111,9 +163,12 @@ def main():
         with knowledge_tabs[2]:
             st.subheader("Test Your Understanding")
             st.write("Take a quiz to test your knowledge on papers you've read.")
-            topic = st.selectbox("Select Topic", ["Machine Learning", "Computer Vision", "Natural Language Processing"])
-            if st.button("Start Quiz"):
-                st.info("Quiz will start with 10 questions about " + topic)
+            options = ["AI", "Business", "Orgnaizational Management", "Finance"]
+            selection = st.pills("Directions", options, selection_mode="multi")
+            # convert list into string
+            selection = ', '.join(selection)
+            if st.button("Generate Quiz", key="generate-quiz"):
+                st.info("Quiz will start with 10 questions about " + selection)
                 # Quiz questions would be displayed here
 
 if __name__=="__main__":
