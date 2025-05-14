@@ -1,21 +1,7 @@
 import streamlit as st
 import time
 
-def bot_response_generator(user_input):
-    """Generate streaming bot responses based on user input"""
-    if "paper" in user_input.lower():
-        response = "You can upload a paper using the 'Upload Paper' button. I can help you understand it better!"
-    elif "quiz" in user_input.lower() or "test" in user_input.lower():
-        response = "Click on the 'Test Knowledge' button to take quizzes on papers you've read or explore your knowledge map."
-    elif "mode" in user_input.lower() or "reading" in user_input.lower():
-        response = "We offer three reading modes: Exploratory (for new ideas), Understanding (for comprehensive learning), and Revisiting (for quick review)."
-    else:
-        response = "How can I help you with your academic paper reading experience today? You can ask about reading modes, paper uploads, or knowledge testing."
-    
-    # Stream the response word by word
-    for word in response.split():
-        yield word + " "
-        time.sleep(0.05)
+
 
 def main():
     # Initialize chat history in session state if it doesn't exist
@@ -64,12 +50,12 @@ def main():
     with col1:
         if st.button("📄 Read Paper", use_container_width=True):
             # Navigate to the upload paper page
-            st.switch_page("pages/read_paper.py")
+            st.switch_page("pages/📄read_paper.py")
     
     with col2:
         if st.button("🧠 Test Knowledge", use_container_width=True):
             # Navigate to the test knowledge page
-            st.switch_page("pages/test_knowledge.py")
+            st.switch_page("pages/🧠test_knowledge.py")
 
 if __name__=="__main__":
     st.set_page_config(page_title="Smart Paper Reader", page_icon="media/images/idea.png")
