@@ -20,7 +20,7 @@ def main():
                 This will help us to adapt the content presentation to your knowledge level. See [the papers](https://docs.google.com/spreadsheets/d/1b5a3bLdPOY6ulVE-cds4q8znyLGSp3OPg7yphZc6s9I/edit?usp=sharing) 
                 we based our tests on.
         ''')
-        options = ["Novice", "Undergrad Level", "Graduate Level"]
+        options = ["Beginner", "Intermediate", "Advanced"]
         selection = st.segmented_control(
             "Level", options, selection_mode="single"
         )
@@ -230,7 +230,7 @@ def main():
     with knowledge_tabs[2]:
         st.subheader("Your Knowledge Map")
         st.write("Visualization of your current knowledge based on papers you've read.")
-        st.image("https://via.placeholder.com/800x400.png?text=Knowledge+Map+Visualization")
+        st.image("media/images/knowledge-map.png", caption="Knowledge Map")
 
     with knowledge_tabs[3]:
         st.subheader("Recommended Papers")

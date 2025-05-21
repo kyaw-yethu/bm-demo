@@ -82,7 +82,6 @@ def main():
     uploaded_file = st.file_uploader("Choose a PDF file", type="pdf")
     
     if uploaded_file is not None:
-
         # Save the file information to session state
         if 'uploaded_paper' not in st.session_state:
             st.session_state.uploaded_paper = uploaded_file

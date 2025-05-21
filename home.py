@@ -1,9 +1,9 @@
 import streamlit as st
 import time
 
-@st.dialog("How Smart Paper Reader works")
+@st.dialog("How Memora works")
 def show_help():
-    st.subheader("Welcome to Smart Paper Reader!")
+    st.subheader("Welcome to Memora!")
     
     st.markdown("""
     ### 📄 Read Paper
@@ -38,9 +38,9 @@ def main():
     with col1:
         st.image("media/images/idea.png")
     
-    st.markdown("<h2 style='text-align: center;'>Smart Paper Reader</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Memora</h2>", unsafe_allow_html=True)
     st.markdown('''
-        Welcome to **Smart Paper Reader**, an intelligent service that helps you read and understand academic papers
+        Welcome to **Memora**, an intelligent service that helps you read and understand academic papers
         more quickly and efficiently utilizing your knowledge.
                 
         **📄 Read Paper**: Upload and read academic paper with our intelligent tools \n
@@ -61,5 +61,5 @@ def main():
             st.switch_page("pages/🧠test_knowledge.py")
 
 if __name__=="__main__":
-    st.set_page_config(page_title="Smart Paper Reader", page_icon="media/images/idea.png")
+    st.set_page_config(page_title="Memora", page_icon="media/images/idea.png")
     main()
