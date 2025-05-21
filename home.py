@@ -1,36 +1,38 @@
 import streamlit as st
 import time
 
-
+@st.dialog("How Smart Paper Reader works")
+def show_help():
+    st.subheader("Welcome to Smart Paper Reader!")
+    
+    st.markdown("""
+    ### 📄 Read Paper
+    Our main interface where you read academic papers with our intelligent tools. 
+    1. **Smart highlighting**: Automatically highlight concepts and ideas in the paper based on your purpose and knowledge level.
+    2. **Knowledge Copilot**: Discuss the paper with our AI assistant instantly without inputting any text.
+    
+    ### 🧠 Test Knowledge
+    - Assess your current knowledge level with quizzes
+    - Track your learning progress with the Knowledge Map
+    - Get paper recommendations based on your interests
+    
+    ### Tips
+    - Use the search function to quickly find content in papers
+    - Create annotations while reading to save important points
+    - Take quizzes regularly to reinforce your learning
+    """)
 
 def main():
-    # Initialize chat history in session state if it doesn't exist
-    if 'messages' not in st.session_state:
-        st.session_state.messages = []
+    st.logo('media/images/idea.png', icon_image='media/images/idea.png')
+    # Help button in the top right corner
+    col_left, col_right = st.columns([0.9, 0.1])
+    with col_right:
+        if st.button("❓", help="Get help"):
+            # Set flag to show help dialog
+            st.session_state.show_help_dialog = True
+            show_help()
     
-    # Sidebar chat interface
-    with st.sidebar:
-        st.title("Paper Reading Assistant")
-        
-        # Display chat messages from history on app rerun
-        for message in st.session_state.messages:
-            with st.chat_message(message["role"]):
-                st.markdown(message["content"])
-
-        # Accept user input
-        if prompt := st.chat_input("What is up?"):
-            # Add user message to chat history
-            st.session_state.messages.append({"role": "user", "content": prompt})
-            # Display user message in chat message container
-            with st.chat_message("user"):
-                st.markdown(prompt)
-
-            # Display assistant response in chat message container
-            with st.chat_message("assistant"):
-                response = st.write_stream(bot_response_generator(prompt))
-            # Add assistant response to chat history
-            st.session_state.messages.append({"role": "assistant", "content": response})        
-
+    
     # Main content
     _, col1, _ = st.columns(3)
     with col1:
@@ -38,10 +40,11 @@ def main():
     
     st.markdown("<h2 style='text-align: center;'>Smart Paper Reader</h2>", unsafe_allow_html=True)
     st.markdown('''
-        Welcome to **Smart Paper Reader**, an intelligent tool that helps you read and understand academic papers
-        based on your knowledge level and learning goals.
+        Welcome to **Smart Paper Reader**, an intelligent service that helps you read and understand academic papers
+        more quickly and efficiently utilizing your knowledge.
                 
-        The system adapts content presentation based on your reading mode and helps you test your knowledge.
+        **📄 Read Paper**: Upload and read academic paper with our intelligent tools \n
+        **🧠 Test Knowledge**: Take quizzes on papers you've read or explore your knowledge map
     ''')
 
     # Main navigation buttons

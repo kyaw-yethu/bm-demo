@@ -1,18 +1,8 @@
 import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
+from streamlit_option_menu import option_menu
 import time
-
-annotations = [
-    {
-        "page": 1,
-        "x": 220,
-        "y": 255,
-        "height": 22,
-        "width": 65,
-        "color": "green",
-        "border": "dotted"
-    }
-]
+import json
 
 def bot_response_generator(user_input):
     """Generate streaming bot responses based on user input"""
@@ -30,10 +20,59 @@ def bot_response_generator(user_input):
         yield word + " "
         time.sleep(0.05)
 
+@st.dialog("Cast your vote")
+def vote(item):
+    st.write(f"Why is {item} your favorite?")
+    reason = st.text_input("Because...")
+    if st.button("Submit"):
+        st.session_state.vote = {"item": item, "reason": reason}
+        st.rerun()
+
 def my_custom_annotation_handler(annotation):
-    print(f"Annotation {annotation} clicked.")
+    st.toast("Seen✅, Understood🧠, Revisit❓")
+
 
 def main():
+    # Initialize chat history in session state if it doesn't exist
+    if 'messages' not in st.session_state:
+        st.session_state.messages = []
+
+    # Sidebar chat interface
+    with st.sidebar:
+        st.title("Chat")
+
+        explain = st.button("Explain selected lines")
+        prompt = st.chat_input("What is up?")
+        
+        # Display chat messages from history on app rerun
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
+
+
+        if explain:
+            st.session_state.messages.append({"role": "user", "content": "Explain selected lines"})
+            with st.chat_message("user"):
+                st.markdown("Explain selected lines")
+            with st.chat_message("assistant"):
+                response = st.write_stream(bot_response_generator("Explain selected lines"))
+            st.session_state.messages.append({"role": "assistant", "content": response})
+        else:
+        # Accept user input
+            if prompt:
+                # Add user message to chat history
+                st.session_state.messages.append({"role": "user", "content": prompt})
+                # Display user message in chat message container
+                with st.chat_message("user"):
+                    st.markdown(prompt)
+
+                # Display assistant response in chat message container
+                with st.chat_message("assistant"):
+                    response = st.write_stream(bot_response_generator(prompt))
+                # Add assistant response to chat history
+                st.session_state.messages.append({"role": "assistant", "content": response})        
+
+
     # Button to return to home
     if st.button("🏡Back to Home"):
         st.switch_page("home.py")
@@ -57,10 +96,23 @@ def main():
 
         options = ["Exploratory", "Understanding", "Revisiting"]
         selection = st.segmented_control(
-            "REading Mode", options, selection_mode="single", default="Understanding"
+            "Reading Mode", options, selection_mode="single", default="Understanding"
         )
-        st.subheader(f"Viewing in {selection} mode")
-        
+        if selection == "Exploratory":
+            st.text(f"Viewing in {selection} mode")
+            with open("annotations/anno1.json", "r") as f:
+                annotations = json.load(f)
+
+        elif selection == "Understanding":
+            st.text(f"Viewing in {selection} mode")
+            with open("annotations/anno2.json", "r") as f:
+                annotations = json.load(f)
+            
+        elif selection == "Revisiting":
+            st.text(f"Viewing in {selection} mode")
+            with open("annotations/anno3.json", "r") as f:
+                annotations = json.load(f)
+
         # Display the PDF viewer with the uploaded file
         pdf_viewer(
             uploaded_file.read(),
@@ -68,7 +120,7 @@ def main():
             height=1000,
             annotations=annotations,
             on_annotation_click=my_custom_annotation_handler,
-            render_text=True,
+            # render_text=True,
         )
     else:
         # Display some info about reading modes when no file is uploaded
