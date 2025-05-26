@@ -19,13 +19,24 @@ def bot_response_generator(user_input):
         yield word + " "
         time.sleep(0.05)
 
-@st.dialog("Cast your vote")
-def vote(item):
-    st.write(f"Why is {item} your favorite?")
-    reason = st.text_input("Because...")
-    if st.button("Submit"):
-        st.session_state.vote = {"item": item, "reason": reason}
-        st.rerun()
+@st.dialog("What are reading modes?")
+def show_help_reading_mode():
+        
+    st.markdown("""        
+        **Exploratory Mode**
+        - Only highlights new key ideas
+        - Auto-collapses well-known sections with a one-line summary
+        - Knowledge base isn't updated
+        
+        **Understanding Mode**
+        - Highlights key ideas, supporting examples, contextual setup
+        - Uses different colors for different importance levels
+        - Shows how ideas connect to your prior knowledge
+        
+        **Revisiting Mode**
+        - Skips parts that set up context for main contents
+        - Shows connections to knowledge you've acquired since first reading
+    """)
 
 def my_custom_annotation_handler(annotation):
     st.toast("Seen✅, Understood🧠, Revisit❓")
@@ -86,16 +97,25 @@ def main():
         if 'uploaded_paper' not in st.session_state:
             st.session_state.uploaded_paper = uploaded_file
         
-        # Offering to generate a pre-quiz
-        st.text("Generate and take a quiz to assess how much you've already known about the paper.")
-        if st.button("Generate a pre-quiz", key="generate-pretest"):
-            # Navigate to the reading page
-            st.info("Some pre-quiz will be generated...")
+        # # Offering to generate a pre-quiz
+        # st.text("Generate and take a quiz to assess how much you've already known about the paper.")
+        # if st.button("Generate a pre-quiz", key="generate-pretest"):
+        #     # Navigate to the reading page
+        #     st.info("Some pre-quiz will be generated...")
+        col_left, col_right = st.columns([0.9, 0.1])
+        with col_left:
+            options = ["Exploratory", "Understanding", "Revisiting"]
+            selection = st.segmented_control(
+                "Reading Mode", options, selection_mode="single", default="Understanding"
+            )
+        with col_right:
+            if st.button("❓", help="Learn about reading modes"):
+                # Set flag to show help dialog
+                st.session_state.show_help_dialog = True
+                show_help_reading_mode()
 
-        options = ["Exploratory", "Understanding", "Revisiting"]
-        selection = st.segmented_control(
-            "Reading Mode", options, selection_mode="single", default="Understanding"
-        )
+
+
         if selection == "Exploratory":
             st.text(f"Viewing in {selection} mode")
             with open("annotations/anno1.json", "r") as f:
@@ -120,26 +140,7 @@ def main():
             on_annotation_click=my_custom_annotation_handler,
             # render_text=True,
         )
-    else:
-        # Display some info about reading modes when no file is uploaded
-        with st.expander("Learn about our Reading Modes"):
-            st.write("""
-                ### Reading Modes
-                
-                **Exploratory Mode**
-                - Only highlights new key ideas
-                - Auto-collapses well-known sections with a one-line summary
-                - Knowledge base isn't updated
-                
-                **Understanding Mode**
-                - Highlights key ideas, supporting examples, contextual setup
-                - Uses different colors for different importance levels
-                - Shows how ideas connect to your prior knowledge
-                
-                **Revisiting Mode**
-                - Skips parts that set up context for main contents
-                - Shows connections to knowledge you've acquired since first reading
-            """)
+        
 
 if __name__ == "__main__":
     main()
