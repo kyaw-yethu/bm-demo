@@ -2,9 +2,9 @@ import streamlit as st
 import time
 
 
-@st.dialog("How Memora works")
+@st.dialog("How Eureka works")
 def show_help():
-    st.subheader("Welcome to Memora!")
+    st.subheader("Welcome to Eureka!")
     
     st.markdown("""
     ### 📄 Read Paper
@@ -23,7 +23,7 @@ def show_help():
     - Take quizzes regularly to reinforce your learning
     """)
 
-@st.dialog("Welcome to Memora💡")
+@st.dialog("Welcome to Eureka")
 def initial_setup():    
     st.write("Please spare just 5~10 minutes to describe the level of your knowledge so that we can better personalize your experience.")
     # Basic information
@@ -90,9 +90,9 @@ def main():
     with col1:
         st.image("media/images/idea.png")
     
-    st.markdown("<h2 style='text-align: center;'>Memora</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center;'>Eureka</h2>", unsafe_allow_html=True)
     st.markdown('''
-        Welcome to **Memora**, an intelligent service that helps you read and understand academic papers
+        Welcome to **Eureka**, an intelligent service that helps you read and understand academic papers
         more quickly and efficiently utilizing your knowledge.
                 
         **📄 Read Paper**: Upload and read academic paper with our intelligent tools (Main Service)\n
@@ -113,5 +113,5 @@ def main():
             st.switch_page("pages/🧠test_knowledge.py")
 
 if __name__=="__main__":
-    st.set_page_config(page_title="Memora", page_icon="media/images/idea.png")
+    st.set_page_config(page_title="Eureka", page_icon="media/images/idea.png")
     main()

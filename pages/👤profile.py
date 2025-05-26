@@ -2,7 +2,7 @@
 import streamlit as st
 import time
 
-@st.dialog("Welcome to Memora💡")
+@st.dialog("Welcome to Eureka💡")
 def initial_setup():    
     st.write("Please spare just 5~10 minutes to describe the level of your knowledge so that we can better personalize your experience.")
     # Basic information
