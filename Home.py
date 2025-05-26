@@ -92,25 +92,26 @@ def main():
     
     st.markdown("<h2 style='text-align: center;'>Eureka</h2>", unsafe_allow_html=True)
     st.markdown('''
-        Welcome to **Eureka**, an intelligent service that helps you read and understand academic papers
-        more quickly and efficiently utilizing your knowledge.
+        Welcome to **Eureka**, we help you read and understand academic papers
+        more quickly and efficiently.
                 
-        **📄 Read Paper**: Upload and read academic paper with our intelligent tools (Main Service)\n
-        **🧠 Test Knowledge**: Take quizzes on papers you've read or explore your knowledge map
-    ''')
 
+    ''')
+        # **📄 Read Paper**: Upload and read academic paper with our intelligent tools (Main Service)\n
+        # **🧠 Test Knowledge**: Take quizzes on papers you've read or explore your knowledge map
+        
     # Main navigation buttons
     col1, col2 = st.columns(2)
     
     with col1:
         if st.button("📄 Read Paper", use_container_width=True):
             # Navigate to the upload paper page
-            st.switch_page("pages/📄read_paper.py")
+            st.switch_page("pages/📄Read_Paper.py")
     
     with col2:
         if st.button("🧠 Test Knowledge", use_container_width=True):
             # Navigate to the test knowledge page
-            st.switch_page("pages/🧠test_knowledge.py")
+            st.switch_page("pages/🧠Test_Knowledge.py")
 
 if __name__=="__main__":
     st.set_page_config(page_title="Eureka", page_icon="media/images/idea.png")

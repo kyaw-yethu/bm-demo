@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 def main():
     # Button to return to home
     if st.button("🏡Back to Home"):
-        st.switch_page("home.py")
+        st.switch_page("Home.py")
 
     st.title("🔬 Additional Features")
     st.write("PS: Please be aware that these are not our main features, but ones requested by customers🙂.")
@@ -29,7 +29,7 @@ def main():
                 col1, col2 = st.columns([1,1])
                 with col1:
                     if st.button(f"Read Now", key=f"read_now_{i}"):
-                        st.switch_page("pages/📄read_paper.py")
+                        st.switch_page("pages/📄Read_Paper.py")
                 with col2:
                     st.button(f"Save for Later", key=f"save_{i}")
 

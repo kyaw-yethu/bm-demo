@@ -85,7 +85,7 @@ def main():
 
     # Button to return to home
     if st.button("🏡Back to Home"):
-        st.switch_page("home.py")
+        st.switch_page("Home.py")
 
     st.title("📄Read Paper")
     

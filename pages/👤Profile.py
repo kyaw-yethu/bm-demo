@@ -46,7 +46,7 @@ def initial_setup():
 def main():
     # Button to return to home
     if st.button("🏡Back to Home"):
-        st.switch_page("home.py")
+        st.switch_page("Home.py")
 
     if 'user_profile' in st.session_state:
         profile = st.session_state.user_profile
@@ -66,7 +66,7 @@ def main():
             accurate personalized experience, we recommend you to take some quizzes we've prepared to assess your knowledge level.
                  ''')
         if st.button("🧠Test Knowledge"):
-            st.switch_page("🧠test_knowledge.py")
+            st.switch_page("pages/🧠Test_Knowledge.py")
 
         st.subheader("Your Knowledge Map")
         st.write("Visualization of your current knowledge based on papers you've read and your manual inputs of knowledge level. (Imagine this map is interactive and each node is clickable to show more details.🙂)")
