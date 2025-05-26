@@ -56,7 +56,7 @@ def main():
     
     # Display user profile information
         st.write(f"**Name:** {profile.get('name', 'N/A')}")
-        st.write(f"**Familiar Subjects:** {', '.join(profile.get('familiar_subjects', [])) if profile.get('interests') else 'N/A'}")
+        st.write(f"**Familiar Subjects:** {', '.join(profile.get('familiar_subjects', [])) if profile.get('familiar_subjects') else 'N/A'}")
         st.write(f"**Knowledge Level:** {profile.get('experience', 'N/A')}")
         st.write(f"**Description of Knowledge:** {profile.get('goals', 'N/A')}")
 
