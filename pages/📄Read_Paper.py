@@ -2,6 +2,7 @@ import streamlit as st
 from streamlit_pdf_viewer import pdf_viewer
 import time
 import json
+import os
 
 def bot_response_generator(user_input):
     """Generate streaming bot responses based on user input"""
@@ -97,11 +98,6 @@ def main():
         if 'uploaded_paper' not in st.session_state:
             st.session_state.uploaded_paper = uploaded_file
         
-        # # Offering to generate a pre-quiz
-        # st.text("Generate and take a quiz to assess how much you've already known about the paper.")
-        # if st.button("Generate a pre-quiz", key="generate-pretest"):
-        #     # Navigate to the reading page
-        #     st.info("Some pre-quiz will be generated...")
         col_left, col_right = st.columns([0.9, 0.1])
         with col_left:
             options = ["Exploratory", "Understanding", "Revisiting"]
@@ -114,29 +110,38 @@ def main():
                 st.session_state.show_help_dialog = True
                 show_help_reading_mode()
 
-
-
+        pdf_content = None
+        
         if selection == "Exploratory":
             st.text(f"Viewing in {selection} mode")
+            # Use the exploratory-mode.pdf file instead of uploaded file
+            with open("media/docs/exploratory-mode.pdf", "rb") as f:
+                pdf_content = f.read()
             with open("annotations/anno1.json", "r") as f:
                 annotations = json.load(f)
 
         elif selection == "Understanding":
             st.text(f"Viewing in {selection} mode")
+            # Use the understanding-mode.pdf file instead of uploaded file
+            with open("media/docs/understanding-mode.pdf", "rb") as f:
+                pdf_content = f.read()
             with open("annotations/anno2.json", "r") as f:
                 annotations = json.load(f)
             
         elif selection == "Revisiting":
             st.text(f"Viewing in {selection} mode")
+            # Continue using the uploaded file for Revisiting mode
+            with open("media/docs/exploratory-mode.pdf", "rb") as f:
+                pdf_content = f.read()
             with open("annotations/anno3.json", "r") as f:
                 annotations = json.load(f)
 
-        # Display the PDF viewer with the uploaded file
+        # Display the PDF viewer with the appropriate content
         pdf_viewer(
-            uploaded_file.read(),
+            pdf_content,
             width=1200,
             height=1000,
-            annotations=annotations,
+            # annotations=annotations,
             on_annotation_click=my_custom_annotation_handler,
             # render_text=True,
         )
