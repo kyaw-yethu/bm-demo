@@ -139,7 +139,7 @@ def main():
             height=1000,
             # annotations=annotations,
             on_annotation_click=my_custom_annotation_handler,
-            # render_text=True,
+            render_text=True,
         )
         
 
