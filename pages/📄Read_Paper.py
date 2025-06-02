@@ -6,8 +6,8 @@ import os
 
 def bot_response_generator(user_input):
     """Generate streaming bot responses based on user input"""
-    if "paper" in user_input.lower():
-        response = "You can upload a paper using the 'Upload Paper' button. I can help you understand it better!"
+    if "explain" in user_input.lower():
+        response = "This is a simple explanation for the super complicated lines you selected."
     elif "quiz" in user_input.lower() or "test" in user_input.lower():
         response = "Click on the 'Test Knowledge' button to take quizzes on papers you've read or explore your knowledge map."
     elif "mode" in user_input.lower() or "reading" in user_input.lower():
@@ -33,10 +33,6 @@ def show_help_reading_mode():
         - Highlights key ideas, supporting examples, contextual setup
         - Uses different colors for different importance levels
         - Shows how ideas connect to your prior knowledge
-        
-        **Revisiting Mode**
-        - Skips parts that set up context for main contents
-        - Shows connections to knowledge you've acquired since first reading
     """)
 
 def my_custom_annotation_handler(annotation):
@@ -100,7 +96,7 @@ def main():
         
         col_left, col_right = st.columns([0.9, 0.1])
         with col_left:
-            options = ["Exploratory", "Understanding", "Revisiting"]
+            options = ["Exploratory", "Understanding"]
             selection = st.segmented_control(
                 "Reading Mode", options, selection_mode="single", default="Understanding"
             )
@@ -115,7 +111,7 @@ def main():
         if selection == "Exploratory":
             st.text(f"Viewing in {selection} mode")
             # Use the exploratory-mode.pdf file instead of uploaded file
-            with open("media/docs/exploratory-mode.pdf", "rb") as f:
+            with open("media/docs/toward-human-centered-algorithm-design-exploratory.pdf", "rb") as f:
                 pdf_content = f.read()
             with open("annotations/anno1.json", "r") as f:
                 annotations = json.load(f)
@@ -123,18 +119,18 @@ def main():
         elif selection == "Understanding":
             st.text(f"Viewing in {selection} mode")
             # Use the understanding-mode.pdf file instead of uploaded file
-            with open("media/docs/understanding-mode.pdf", "rb") as f:
+            with open("media/docs/toward-human-centered-algorithm-design-exploratory-understanding.pdf", "rb") as f:
                 pdf_content = f.read()
             with open("annotations/anno2.json", "r") as f:
                 annotations = json.load(f)
             
-        elif selection == "Revisiting":
-            st.text(f"Viewing in {selection} mode")
-            # Continue using the uploaded file for Revisiting mode
-            with open("media/docs/exploratory-mode.pdf", "rb") as f:
-                pdf_content = f.read()
-            with open("annotations/anno3.json", "r") as f:
-                annotations = json.load(f)
+        # elif selection == "Revisiting":
+        #     st.text(f"Viewing in {selection} mode")
+        #     # Continue using the uploaded file for Revisiting mode
+        #     with open("media/docs/exploratory-mode.pdf", "rb") as f:
+        #         pdf_content = f.read()
+        #     with open("annotations/anno3.json", "r") as f:
+        #         annotations = json.load(f)
 
         # Display the PDF viewer with the appropriate content
         pdf_viewer(
